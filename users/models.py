@@ -24,8 +24,9 @@ class Raid(models.Model):
 
 
 class Pig(models.Model):
+    name = models.CharField(default="default pig", max_length=40)
     level = models.IntegerField(_('level'), default=1)
     status = models.CharField(_('pig status'), max_length=32)
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=('user'))
-    upgrade_started = models.TimeField(_('upgrade started'), default=timezone.now)
-    upgrade_time = models.TimeField(_('upgrade time'), default=timedelta(seconds=30), blank=True)
+    upgrade_started = models.DateTimeField(_('upgrade started'), default=timezone.now)
+    upgrade_time = models.DateTimeField(_('upgrade time'), default=timezone.now, blank=True)

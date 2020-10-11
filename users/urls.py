@@ -1,6 +1,9 @@
 from django.urls import path, include
 from rest_framework.routers import SimpleRouter
 from rest_framework_nested.routers import NestedSimpleRouter
+from users.views import index_view
+from users.views import pigs_view
+from users.views import raids_view
 from users.views import UserViewSet, RaidViewSet, PigViewSet
 
 router = SimpleRouter()
@@ -17,5 +20,8 @@ urlpatterns = [
     path("", include(router.urls)),
     path("", include(raid_router.urls)),
     path("", include(pig_router.urls)),
+    path("", index_view, name="index_view"),
+    path("pigs", pigs_view, name="pigs_view"),
+    path("raids", raids_view, name="raids_view"),
 
 ]

@@ -1,12 +1,25 @@
 from rest_framework import viewsets, permissions, mixins
 
 # Create your views here.
+from django.shortcuts import render
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from users.models import User, Raid, Pig
 from users.serializers import UserSerializer, RaidPostSerializer, RaidGetSerializer, RaidSerializer, PigSerializer, \
     PigUpgradeSerializer
+
+
+def index_view(request):
+    return render(request, "index.html", {})
+
+
+def pigs_view(request):
+    return render(request, "pigs.html", {})
+
+
+def raids_view(request):
+    return render(request, "raids.html", {})
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -17,7 +30,7 @@ class UserViewSet(viewsets.ModelViewSet):
 class RaidViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
 
     def get_queryset(self):
-        return Raid.objects.filter(user=self.kwargs.get('user_id', ''))
+        return Raid.objects.filter(user=self.kwargs.get('user_pk', ''))
 
     def get_serializer_class(self):
         if self.action == 'create':
@@ -31,7 +44,7 @@ class PigViewSet(viewsets.ModelViewSet):
     serializer_class = PigSerializer
 
     def get_queryset(self):
-        return Pig.objects.filter(user=self.kwargs.get('user_id', ''))
+        return Pig.objects.filter(user=self.kwargs.get('user_pk')).order_by("-id")
 
     @action(detail=True, methods=['patch'], serializer_class=PigUpgradeSerializer)
     def upgrade(self, request, *args, **kwargs):
