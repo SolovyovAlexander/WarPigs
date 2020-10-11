@@ -4,12 +4,13 @@ from rest_framework import viewsets, permissions, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from users.models import Raid, Pig
+from users.models import User, Raid, Pig
 from users.serializers import UserSerializer, RaidPostSerializer, RaidGetSerializer, RaidSerializer, PigSerializer, \
     PigUpgradeSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
     serializer_class = UserSerializer
 
 

@@ -7,8 +7,8 @@ from django.utils.translation import gettext_lazy as _
 
 
 class User(AbstractUser):
-    bricks = models.IntegerField(_('bricks'))
-    rating = models.IntegerField(_('rating'))
+    bricks = models.IntegerField(_('bricks'), default=100)
+    rating = models.IntegerField(_('rating'), default=0)
 
     def __str__(self):
         return f'{self.email}'
