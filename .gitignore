@@ -1,0 +1,66 @@
+*.bak
+*.csv
+*.log*
+*.orig
+*.pyc
+*.swo
+*.swp
+.*~
+.vim
+.DS_Store
+/ken/settings/local.py
+celerybeat*
+ken/settings/local.py*
+ken/settings/production.py
+deploy/keysets/production
+logs
+services/github/migrations
+services/pagerduty/migrations
+
+bower_components
+node_modules
+ken_static/static/dist
+.tmp
+.tmpPartner
+
+
+._.DS_Store
+.fuse_hidden*
+newrelic.ini
+
+clients/celery/ehonda/tests/*.csv
+
+# Editors
+.idea/
+.ropeproject/
+Session.vim
+
+
+# Grunt builds
+.tmp/
+package-lock.json
+
+
+# Ctags
+tags
+.ctags
+
+
+# Tests
+ken/TestReport
+.tox
+.pytest_cache
+.coverage
+coverage_html_report/
+coverage.xml
+# Pytest
+.cache/
+test-reports
+tmp/
+
+/venv
+
+# Typing
+db.sqlite3
+.mypy_cache
+
