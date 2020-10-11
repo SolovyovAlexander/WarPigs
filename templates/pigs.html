@@ -42,13 +42,13 @@
                     <form action="https://formspree.io/email@example.com" method="POST" class="form-contact"
                           id="create_pig">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input class="mdl-textfield__input" maxlength="40" autocomplete="off" type="text" id="Name"
+                            <input class="mdl-textfield__input" required maxlength="40" autocomplete="off" type="text" id="Name"
                                    name="name">
                             <label class="mdl-textfield__label" for="Name">Name...</label>
                             <span class="mdl-textfield__error">Letters and spaces only</span>
                         </div>
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input class="mdl-textfield__input" id="Level" name="level" type="number" list="quantities" min="1"
+                            <input class="mdl-textfield__input" required id="Level" name="level" type="number" list="quantities" min="1"
                                    max="5" step="1">
                             <datalist id="quantities">
                                 <option value="1">
@@ -102,15 +102,22 @@
                 url: `http://localhost:8000/users/${user_test_id}/pigs/`,
                 method: 'POST',
                 data: values
-            }).done(function (pigs_data) {
+            }).done(function (pigs_data, textStatus, xhr) {
                 refresh_pigs_list();
+                alert(xhr);
+            }).fail(function (pigs_data, textStatus, xhr) {
+                try {
+                    alert(pigs_data.responseJSON.error);
+                } catch (e){
+                    alert(xhr);
+                }
             });
         });
-        refresh_pigs_list();
+        refresh_pigs_list(true);
     });
 
 
-    function refresh_pigs_list() {
+    function refresh_pigs_list(loop=false) {
         $.ajax({
             url: `http://localhost:8000/users/${user_test_id}/pigs/`
         }).done(function (pigs_data) {
@@ -150,7 +157,9 @@
                         </div>
                     </div>`)
             });
-
+            if (loop){
+                setTimeout(refresh_pigs_list.bind(null, true), 500);
+            }
         });
     }
 </script>

@@ -2,6 +2,7 @@ from rest_framework import viewsets, permissions, mixins
 
 # Create your views here.
 from django.shortcuts import render
+from django.http.response import JsonResponse
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -45,6 +46,18 @@ class PigViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return Pig.objects.filter(user=self.kwargs.get('user_pk')).order_by("-id")
+
+    def create(self, request, *args, **kwargs):
+        lvl = int(self.request.data.get("level", 1))
+        user = User.objects.get(pk=self.kwargs.get('user_pk'))
+        create_cost = lvl * 100
+        if user.bricks >= create_cost:
+            res = super(PigViewSet, self).create(request, *args, **kwargs)
+            user.bricks -= create_cost
+            user.save()
+            return res
+        else:
+            return JsonResponse({"error": "Not enough coins!"}, status=400)
 
     @action(detail=True, methods=['patch'], serializer_class=PigUpgradeSerializer)
     def upgrade(self, request, *args, **kwargs):
