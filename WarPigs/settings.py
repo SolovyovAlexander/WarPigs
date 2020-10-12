@@ -14,13 +14,15 @@ import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+from celery.schedules import crontab
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'u1+q87trpfj^a(8f0&v_*-0dc8yn2z#138n(3$@on)r1xv2ezo'
+SECRET_KEY = 'dbaa1_i7%*3r9-=z-+_mz4r-!qeed@(-a_r(g@k8jo8y3r27%m'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -144,3 +146,12 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 print("POPA: ", STATIC_ROOT)
 
 AUTH_USER_MODEL = 'users.User'
+
+CELERY_BROKER_URL = 'amqp://localhost'
+
+CELERY_BEAT_SCHEDULE = {
+    "sample_task": {
+        "task": "users.tasks.increase_bricks_number",
+        "schedule": crontab(minute="*/1"),
+    },
+}
