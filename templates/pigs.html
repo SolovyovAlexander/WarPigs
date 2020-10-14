@@ -22,7 +22,7 @@
             <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font"><a class="mdl-navigation__link"
                                                                                        href="/">Stats</a><a
                     class="mdl-navigation__link is-active" href="/pigs">Pigs</a><a class="mdl-navigation__link"
-                                                                             href="/raids">Raids</a>
+                                                                                   href="/raids">Raids</a>
             </nav>
         </div>
     </header>
@@ -30,7 +30,7 @@
         <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font"><a class="mdl-navigation__link"
                                                                                    href="/">Stats</a><a
                 class="mdl-navigation__link is-active" href="/pigs">Pigs</a><a class="mdl-navigation__link"
-                                                                         href="/raids">Raids</a>
+                                                                               href="/raids">Raids</a>
         </nav>
     </div>
 
@@ -42,13 +42,15 @@
                     <form action="https://formspree.io/email@example.com" method="POST" class="form-contact"
                           id="create_pig">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input class="mdl-textfield__input" required maxlength="40" autocomplete="off" type="text" id="Name"
+                            <input class="mdl-textfield__input" required maxlength="40" autocomplete="off" type="text"
+                                   id="Name"
                                    name="name">
                             <label class="mdl-textfield__label" for="Name">Name...</label>
                             <span class="mdl-textfield__error">Letters and spaces only</span>
                         </div>
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input class="mdl-textfield__input" required id="Level" name="level" type="number" list="quantities" min="1"
+                            <input class="mdl-textfield__input" required id="Level" name="level" type="number"
+                                   list="quantities" min="1"
                                    max="5" step="1">
                             <datalist id="quantities">
                                 <option value="1">
@@ -101,14 +103,14 @@
             $.ajax({
                 url: `http://localhost:8000/users/${user_test_id}/pigs/`,
                 method: 'POST',
-                headers:{"X-CSRFToken": "{{csrf_token}}"},
+                headers: {"X-CSRFToken": "{{csrf_token}}"},
                 data: values
             }).done(function (pigs_data, textStatus, xhr) {
                 refresh_pigs_list();
             }).fail(function (pigs_data, textStatus, xhr) {
                 try {
                     alert(pigs_data.responseJSON.error);
-                } catch (e){
+                } catch (e) {
                     alert(xhr);
                 }
             });
@@ -116,17 +118,40 @@
         refresh_pigs_list(true);
     });
 
+    function upgrade_pig(pig_id) {
+        $.ajax({
+            url: `http://localhost:8000/users/${user_test_id}/pigs/${pig_id}/upgrade/`,
+            method: 'PATCH',
+            headers: {"X-CSRFToken": "{{csrf_token}}"},
+        }).done(function (raid_data, textStatus, xhr) {
+            refresh_pigs_list();
+        }).fail(function (raid_data, textStatus, xhr) {
+            try {
+                alert(raid_data.responseJSON.error);
+            } catch (e) {
+                alert(textStatus);
+            }
+        });
+    }
 
-    function refresh_pigs_list(loop=false) {
+    function refresh_pigs_list(loop = false) {
         $.ajax({
             url: `http://localhost:8000/users/${user_test_id}/pigs/`
         }).done(function (pigs_data) {
             $("#pigs_list").html("");
             pigs_data.forEach(pig => {
+                let is_upgrade = "";
                 let status = pig.status;
                 let pig_icon = "https://i.ytimg.com/vi/khR-1FFADZ8/maxresdefault.jpg";
-                if (status === "in-progress")
-                    status = "Upgrade in progress!"
+
+                let upgrade_time = "";
+                if (status === "in-progress") {
+                    status = "Upgrade in progress!";
+                    if (pig.time_left) {
+                        upgrade_time = `<br>Time Left: ${pig.time_left}`;
+                        is_upgrade = `disabled="true"`;
+                    }
+                }
                 switch (pig.level) {
                     case 2:
                         pig_icon = "https://www.gamerevolution.com/assets/uploads/2012/02/file_2279_creepy-pig-1280x720.jpg";
@@ -134,7 +159,26 @@
                     case 3:
                         pig_icon = "https://media.comicbook.com/2019/09/inosuke-1188806-1280x0.jpeg";
                         break
+                    case 4:
+                        pig_icon = "https://i.ytimg.com/vi/H4fzw_B6ZQ0/maxresdefault.jpg";
+                        break
+                    case 5:
+                        pig_icon = "https://i.ytimg.com/vi/Pot5ey_G00U/maxresdefault.jpg";
+                        break
                 }
+
+                let upgrade_button = "";
+
+                if (pig.level < 5)
+                    upgrade_button = `<div class="mdl-card__actions mdl-card--border">
+                            <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
+                               onclick="upgrade_pig(${pig.id})" ${is_upgrade}>
+                                Upgrade! (${pig.upgrade_cost} bricks)
+                            </a>
+                        </div>`;
+                else if (pig.level >= 5)
+                    upgrade_button = "<p style='margin-left: 14px; color: orangered; font-weight: bolder'>Max level reached!</p>"
+
 
                 $("#pigs_list").append(`<div class="mdl-cell mdl-card mdl-shadow--4dp portfolio-card">
                         <div class="mdl-card__media">
@@ -147,17 +191,13 @@
                             Level: ${pig.level}
                             <br>
                             Status: ${status}
+                            ${upgrade_time}
                         </div>
                         <br>
-                        <div class="mdl-card__actions mdl-card--border">
-                            <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
-                               href="portfolio-page.html">
-                                Upgrade!
-                            </a>
-                        </div>
+                        ${upgrade_button}
                     </div>`)
             });
-            if (loop){
+            if (loop) {
                 setTimeout(refresh_pigs_list.bind(null, true), 500);
             }
         });

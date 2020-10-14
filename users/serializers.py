@@ -62,6 +62,7 @@ class RaidGetSerializer(serializers.ModelSerializer):
             "created",
             "preparation_time",
             "time_left",
+            "status",
         ]
 
     @staticmethod
@@ -81,9 +82,18 @@ class RaidSerializer(serializers.ModelSerializer):
 
 
 class PigSerializer(serializers.ModelSerializer):
+    time_left = serializers.SerializerMethodField()
+
     class Meta:
         model = Pig
         fields = "__all__"
+
+    @staticmethod
+    def get_time_left(instance):
+        time_left = instance.upgrade_started + instance.upgrade_time - timezone.now()
+        if time_left > timedelta(seconds=0):
+            return str(time_left).split(".")[0]
+        return False
 
 
 class PigUpgradeSerializer(serializers.ModelSerializer):

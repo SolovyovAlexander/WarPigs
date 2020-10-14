@@ -18,7 +18,7 @@ class Raid(models.Model):
     user_to_raid = models.IntegerField(_("user to raid"))
     status = models.CharField(_("status"), max_length=24)
     preparation_time = models.TimeField(
-        _("preparation time"), default="00:00:30", blank=True, null=True
+        _("preparation time"), default="00:00:05", blank=True, null=True
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=("user"))
     result = models.CharField(_("result"), max_length=24, default="active", blank=True, null=True)
@@ -32,3 +32,4 @@ class Pig(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='pigs', verbose_name=("user"))
     upgrade_started = models.DateTimeField(_("upgrade started"), default=timezone.now, blank=True, null=True)
     upgrade_time = models.DurationField(default=timedelta(seconds=2))
+    upgrade_cost = models.IntegerField(default=50)
