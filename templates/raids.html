@@ -93,9 +93,11 @@
                 }
 
                 let raid_info = "";
-                if (is_raided){
+                if (is_raided) {
                     if (is_raided.time_left)
                         raid_info = `<p style="margin: 0; padding: 0">Raid in progress. Time Left: ${is_raided.time_left}</p>`;
+                    else
+                        raid_info = `<p style="margin: 0; padding: 0">Raid Completed: ${is_raided.status}</p>`;
                 }
 
                 $("#users_list").append(`<li id="user_${user.id}_data" class="list-group-item">
@@ -123,9 +125,9 @@
 
     function raid(user_id) {
         $.ajax({
-            url: `http://localhost:8000/users/1/raids/`,
+            url: `http://localhost:8000/users/${user_test_id}/raids/`,
             method: 'POST',
-            headers:{"X-CSRFToken": "{{csrf_token}}"},
+            headers: {"X-CSRFToken": "{{csrf_token}}"},
             data: {"user": user_test_id, "user_to_raid": user_id, "status": "active"}
         }).done(function (raid_data, textStatus, xhr) {
             get_users();

@@ -1,10 +1,10 @@
-from rest_framework import viewsets, permissions, mixins
-
 # Create your views here.
 from django.shortcuts import render
 from django.http.response import JsonResponse
+from django.utils import timezone
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework import viewsets, mixins
 
 from users.models import User, Raid, Pig
 from users.serializers import (
@@ -42,7 +42,7 @@ class RaidViewSet(
     viewsets.GenericViewSet,
 ):
     def get_queryset(self):
-        return Raid.objects.filter(user=self.kwargs.get("user_pk", ""))
+        return Raid.objects.filter(user=self.kwargs.get("user_pk", "")).order_by("created")
 
     def get_serializer_class(self):
         if self.action == "create":
@@ -73,9 +73,20 @@ class PigViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["patch"], serializer_class=PigUpgradeSerializer)
     def upgrade(self, request, *args, **kwargs):
         instance = self.get_object()
+        user = User.objects.get(pk=self.kwargs.get("user_pk"))
+
+        if instance.upgrade_cost > user.bricks:
+            return JsonResponse({"error": "Not enough coins!"}, status=400)
+
         serializer = self.get_serializer(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
+        pig = Pig.objects.get(pk=self.kwargs["pk"])
+        pig.status = "in-progress"
+        pig.upgrade_started = timezone.now()
+        pig.save()
+
+        upgrade_pig.apply_async(kwargs={"pig_id": pig.id}, countdown=pig.upgrade_time.seconds - 1)
 
         if getattr(instance, "_prefetched_objects_cache", None):
             # If 'prefetch_related' has been applied to a queryset, we need to
