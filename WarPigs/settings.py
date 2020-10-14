@@ -141,7 +141,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 AUTH_USER_MODEL = "users.User"
 
-CELERY_BROKER_URL = "amqp://localhost"
+CELERY_BROKER_URL = 'amqp://user:password@rabbitmq:5672'
 
 CELERY_BEAT_SCHEDULE = {
     "sample_task": {
