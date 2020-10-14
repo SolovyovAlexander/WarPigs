@@ -23,6 +23,6 @@ sqlparse==0.4.1
 uritemplate==3.0.1
 urllib3==1.25.10
 django-cors-headers
-celery==5.0.0
-redis==3.5.3
-kombu==5.0.2
+celery==4.4.6
+kombu==4.6.10
+flower==0.9.5

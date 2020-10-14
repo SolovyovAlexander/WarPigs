@@ -33,3 +33,12 @@ services:
       - ./:/usr/src/app/
     depends_on:
       - rabbitmq
+  flower:
+    build: ./
+    command: flower -A WarPigs --port=5555 --broker=amqp://user:password@rabbitmq:5672
+    ports:
+      - 5555:5555
+    depends_on:
+      - web
+      - rabbitmq
+      - celery
