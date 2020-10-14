@@ -21,7 +21,7 @@
         <div class="mdl-layout__header-row site-navigation-row mdl-layout--large-screen-only">
             <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font"><a class="mdl-navigation__link"
                                                                                        href="/">Stats</a><a
-                    class="mdl-navigation__link" href="/pigs">Pigs</a><a class="mdl-navigation__link"
+                    class="mdl-navigation__link is-active" href="/pigs">Pigs</a><a class="mdl-navigation__link"
                                                                              href="/raids">Raids</a>
             </nav>
         </div>
@@ -29,7 +29,7 @@
     <div class="mdl-layout__drawer mdl-layout--small-screen-only">
         <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font"><a class="mdl-navigation__link"
                                                                                    href="/">Stats</a><a
-                class="mdl-navigation__link" href="/pigs">Pigs</a><a class="mdl-navigation__link"
+                class="mdl-navigation__link is-active" href="/pigs">Pigs</a><a class="mdl-navigation__link"
                                                                          href="/raids">Raids</a>
         </nav>
     </div>
@@ -101,10 +101,10 @@
             $.ajax({
                 url: `http://localhost:8000/users/${user_test_id}/pigs/`,
                 method: 'POST',
+                headers:{"X-CSRFToken": "{{csrf_token}}"},
                 data: values
             }).done(function (pigs_data, textStatus, xhr) {
                 refresh_pigs_list();
-                alert(xhr);
             }).fail(function (pigs_data, textStatus, xhr) {
                 try {
                     alert(pigs_data.responseJSON.error);
