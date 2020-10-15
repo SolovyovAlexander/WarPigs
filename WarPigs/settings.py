@@ -27,7 +27,7 @@ SECRET_KEY = "dbaa1_i7%*3r9-=z-+_mz4r-!qeed@(-a_r(g@k8jo8y3r27%m"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*", ]
 
 # Application definition
 
@@ -68,7 +68,7 @@ CORS_ALLOW_METHODS = [
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = ("http://127.0.0.1:8000",)
+CORS_ORIGIN_WHITELIST = ("http://127.0.0.1:8000", "http://165.227.150.138:8000/")
 
 ROOT_URLCONF = "WarPigs.urls"
 
