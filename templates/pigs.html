@@ -106,7 +106,7 @@
                 values[field.name] = field.value;
             });
             $.ajax({
-                url: `http://localhost:8000/users/${user_test_id}/pigs/`,
+                url: `/users/${user_test_id}/pigs/`,
                 method: 'POST',
                 headers: {"X-CSRFToken": "{{csrf_token}}"},
                 data: values
@@ -125,7 +125,7 @@
 
     function get_users(){
          $.ajax({
-            url: `http://localhost:8000/users/`
+            url: `/users/`
         }).done(function (users_data) {
             users_data.forEach(user => {
                 let is_selected = "";
@@ -139,7 +139,7 @@
 
     function upgrade_pig(pig_id) {
         $.ajax({
-            url: `http://localhost:8000/users/${user_test_id}/pigs/${pig_id}/upgrade/`,
+            url: `/users/${user_test_id}/pigs/${pig_id}/upgrade/`,
             method: 'PATCH',
             headers: {"X-CSRFToken": "{{csrf_token}}"},
         }).done(function (raid_data, textStatus, xhr) {
@@ -155,7 +155,7 @@
 
     function refresh_pigs_list(loop = false) {
         $.ajax({
-            url: `http://localhost:8000/users/${user_test_id}/pigs/`
+            url: `/users/${user_test_id}/pigs/`
         }).done(function (pigs_data) {
             $("#pigs_list").html("");
             pigs_data.forEach(pig => {

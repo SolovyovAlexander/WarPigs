@@ -78,9 +78,9 @@
 <script>
     var user_test_id = parseInt(localStorage.getItem("user_id")) || 1;
 
-    function get_users(){
+    function get_users(){``
          $.ajax({
-            url: `http://localhost:8000/users/`
+            url: `/users/`
         }).done(function (users_data) {
             users_data.forEach(user => {
                 let is_selected = "";
@@ -94,7 +94,7 @@
 
     function refresh_user_stats() {
         $.ajax({
-            url: `http://localhost:8000/users/${user_test_id}/`
+            url: `/users/${user_test_id}/`
         }).done(function (user_data) {
             $("#user_bricks_count").text(user_data.bricks);
             $("#user_name").text(user_data.username);

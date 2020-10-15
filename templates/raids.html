@@ -74,7 +74,7 @@
 
     function get_users_login(){
          $.ajax({
-            url: `http://localhost:8000/users/`
+            url: `/users/`
         }).done(function (users_data) {
             users_data.forEach(user => {
                 let is_selected = "";
@@ -88,11 +88,11 @@
 
     function get_users(loop = false) {
         $.ajax({
-            url: `http://localhost:8000/users/`
+            url: `/users/`
         }).done(function (users_data) {
 
             var raids_data = $.ajax({
-                url: `http://localhost:8000/users/${user_test_id}/raids/`,
+                url: `/users/${user_test_id}/raids/`,
                 async: false
             }).responseJSON;
 
@@ -142,7 +142,7 @@
 
     function raid(user_id) {
         $.ajax({
-            url: `http://localhost:8000/users/${user_test_id}/raids/`,
+            url: `/users/${user_test_id}/raids/`,
             method: 'POST',
             headers: {"X-CSRFToken": "{{csrf_token}}"},
             data: {"user": user_test_id, "user_to_raid": user_id, "status": "active"}
