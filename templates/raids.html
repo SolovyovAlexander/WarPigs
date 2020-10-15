@@ -17,6 +17,8 @@
 <body id="top">
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <header class="mdl-layout__header mdl-layout__header--waterfall site-header">
+        <select onchange="user_test_id=parseInt(this.options[this.selectedIndex].value); localStorage.setItem('user_id', user_test_id);" id="inputUserState" class="form-control" style="width: 200px; float: right">
+        </select>
         <div class="mdl-layout__header-row site-logo-row"><span class="mdl-layout__title">
             <div class="site-logo"></div><span class="site-description">War Pigs</span></span></div>
         <div class="mdl-layout__header-row site-navigation-row mdl-layout--large-screen-only">
@@ -63,11 +65,26 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script>
-    var user_test_id = 1;
+    var user_test_id = parseInt(localStorage.getItem("user_id")) || 1;
 
     $(document).ready(function () {
+        get_users_login();
         get_users(true);
     });
+
+    function get_users_login(){
+         $.ajax({
+            url: `http://localhost:8000/users/`
+        }).done(function (users_data) {
+            users_data.forEach(user => {
+                let is_selected = "";
+                if (user.id === user_test_id){
+                    is_selected = "selected";
+                }
+                $("#inputUserState").append(`<option ${is_selected} value="${user.id}">${user.username}</option>`);
+            })
+        });
+    }
 
     function get_users(loop = false) {
         $.ajax({
