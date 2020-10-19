@@ -3,4 +3,5 @@ This project is for the elective on Distributed systems and middleware: patterns
 
 ## How to run
 `docker-compose up -d --build`
-and go to `localhost:8000`
+
+And go to `localhost:8000`
